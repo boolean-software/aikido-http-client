@@ -1,6 +1,10 @@
 package aikidohttp
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"net/url"
+	"strconv"
+)
 
 type AikidoUser struct {
 	ID                 int    `json:"id"`
@@ -12,8 +16,28 @@ type AikidoUser struct {
 	AuthType           string `json:"auth_type"`
 }
 
-func (c *AikidoHttpClient) ListUsers() ([]AikidoUser, error) {
-	req, err := c.makeRequest("GET", "api/public/v1/users", nil)
+type ListUsersFilters struct {
+	TeamId          int32
+	IncludeInactive int32
+}
+
+var DefaultListUsersFilters = ListUsersFilters{
+	TeamId:          -1,
+	IncludeInactive: -1,
+}
+
+func (c *AikidoHttpClient) ListUsers(filters ListUsersFilters) ([]AikidoUser, error) {
+	params := url.Values{}
+
+	if filters.TeamId >= 1 {
+		params.Set("filter_team_id", strconv.FormatInt(int64(filters.TeamId), 10))
+	}
+
+	if filters.IncludeInactive >= 0 {
+		params.Set("include_inactive", strconv.FormatInt(int64(filters.IncludeInactive), 10))
+	}
+
+	req, err := c.makeRequest("GET", "api/public/v1/users?"+params.Encode(), nil)
 	if err != nil {
 		return []AikidoUser{}, err
 	}
