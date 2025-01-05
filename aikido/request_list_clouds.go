@@ -1,4 +1,4 @@
-package aikidohttp
+package aikido
 
 import (
 	"encoding/json"
