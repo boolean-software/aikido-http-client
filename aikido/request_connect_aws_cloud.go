@@ -14,7 +14,7 @@ type connectAwsResponse struct {
 	ID string `json:"id"`
 }
 
-func (c *AikidoHttpClient) ConnectAWSCloud(roleArn string, name string, environment string) (string, error) {
+func (c *Client) ConnectAWSCloud(roleArn string, name string, environment string) (string, error) {
 
 	req, err := c.makeRequest("POST", "api/public/v1/clouds/aws", connectAWSRequest{
 		Name:        name,

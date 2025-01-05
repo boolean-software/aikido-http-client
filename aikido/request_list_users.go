@@ -26,7 +26,7 @@ var DefaultListUsersFilters = ListUsersFilters{
 	IncludeInactive: -1,
 }
 
-func (c *AikidoHttpClient) ListUsers(filters ListUsersFilters) ([]AikidoUser, error) {
+func (c *Client) ListUsers(filters ListUsersFilters) ([]AikidoUser, error) {
 	params := url.Values{}
 
 	if filters.TeamId >= 1 {

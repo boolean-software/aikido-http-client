@@ -24,7 +24,7 @@ var DefaultListCloudsFilters = ListCloudsFilters{
 	PerPage: 20,
 }
 
-func (c *AikidoHttpClient) ListClouds(filters ListCloudsFilters) ([]CloudEnvironment, error) {
+func (c *Client) ListClouds(filters ListCloudsFilters) ([]CloudEnvironment, error) {
 	params := url.Values{}
 
 	params.Set("page", strconv.FormatInt(int64(filters.Page), 10))

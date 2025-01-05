@@ -15,7 +15,7 @@ type authResponse struct {
 	TokenType   string `json:"token_type"`
 }
 
-func (c *AikidoHttpClient) Auth(clientId string, clientSecret string) error {
+func (c *Client) Auth(clientId string, clientSecret string) error {
 	req, err := c.makeRequest("POST", "api/oauth/token", authRequest{
 		GrantType: "client_credentials",
 	})

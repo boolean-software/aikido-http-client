@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-type AikidoHttpClient struct {
+type Client struct {
 	client       *http.Client
 	url          string
 	clientId     string
@@ -19,8 +19,8 @@ type AikidoHttpClient struct {
 	refreshTime  time.Time
 }
 
-func NewAikidoHttpClient(clientId string, clientSecret string) *AikidoHttpClient {
-	return &AikidoHttpClient{
+func NewAikidoHttpClient(clientId string, clientSecret string) *Client {
+	return &Client{
 		client: &http.Client{
 			Timeout: 1 * time.Minute,
 		},
@@ -30,11 +30,11 @@ func NewAikidoHttpClient(clientId string, clientSecret string) *AikidoHttpClient
 	}
 }
 
-func (c *AikidoHttpClient) urlFor(path string) string {
+func (c *Client) urlFor(path string) string {
 	return fmt.Sprintf("%s/%s", c.url, path)
 }
 
-func (c *AikidoHttpClient) getToken() (string, error) {
+func (c *Client) getToken() (string, error) {
 	if time.Now().After(c.refreshTime) {
 		err := c.Auth(c.clientId, c.clientSecret)
 		if err != nil {
@@ -45,7 +45,7 @@ func (c *AikidoHttpClient) getToken() (string, error) {
 	return c.accessToken, nil
 }
 
-func (c *AikidoHttpClient) makeRequest(method string, path string, body any) (*http.Request, error) {
+func (c *Client) makeRequest(method string, path string, body any) (*http.Request, error) {
 	url := c.urlFor(path)
 
 	var bodyReader io.Reader
@@ -62,7 +62,7 @@ func (c *AikidoHttpClient) makeRequest(method string, path string, body any) (*h
 	return http.NewRequest(method, url, bodyReader)
 }
 
-func (c *AikidoHttpClient) do(req *http.Request, auth Auth, expectedStatusCode int, failureStatusCodes []int) ([]byte, error) {
+func (c *Client) do(req *http.Request, auth Auth, expectedStatusCode int, failureStatusCodes []int) ([]byte, error) {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", auth.HeaderValue())
