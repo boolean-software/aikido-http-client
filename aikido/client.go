@@ -78,7 +78,7 @@ func (c *AikidoHttpClient) do(req *http.Request, auth Auth, expectedStatusCode i
 	}
 
 	if slices.Contains(failureStatusCodes, resp.StatusCode) {
-		var error *ErrorBody
+		var error *errorBody
 
 		err = json.Unmarshal(responseBody, &error)
 		if err != nil {

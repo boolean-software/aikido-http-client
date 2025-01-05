@@ -2,14 +2,14 @@ package aikido
 
 import "fmt"
 
-type ErrorBody struct {
+type errorBody struct {
 	Error            string `json:"error,omitempty"`
 	ErrorDescription string `json:"error_description,omitempty"`
 	Example          string `json:"example,omitempty"`
 	ReasonPhrase     string `json:"reason_phrase,omitempty"`
 }
 
-func (err ErrorBody) error() error {
+func (err errorBody) error() error {
 	if err.Error != "" {
 		return fmt.Errorf("%s (%s) \n%s", err.ErrorDescription, err.Error, err.Example)
 	}
