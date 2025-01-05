@@ -85,11 +85,11 @@ func (c *AikidoHttpClient) do(req *http.Request, auth Auth, expectedStatusCode i
 			return []byte{}, err
 		}
 
-		return []byte{}, fmt.Errorf("failed on auth request: %s (%s) \n%s", error.ErrorDescription, error.Error, error.Example)
+		return []byte{}, error.error()
 	}
 
 	if resp.StatusCode != expectedStatusCode {
-		return []byte{}, fmt.Errorf("failed on auth request: Unexpected status code `%d` instead of ``%d`", resp.StatusCode, 200)
+		return []byte{}, fmt.Errorf("unexpected status code `%d` instead of ``%d`", resp.StatusCode, 200)
 	}
 
 	return responseBody, nil
