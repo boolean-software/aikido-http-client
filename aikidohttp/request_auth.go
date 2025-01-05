@@ -5,19 +5,18 @@ import (
 	"time"
 )
 
-type AuthBody struct {
-	GrantType    string `json:"grant_type"`
-	RefreshToken string `json:"refresh_token,omitempty"`
+type authRequest struct {
+	GrantType string `json:"grant_type"`
 }
 
-type AuthResponse struct {
+type authResponse struct {
 	AccessToken string `json:"access_token"`
 	ExpiresIn   int32  `json:"expires_in"`
 	TokenType   string `json:"token_type"`
 }
 
 func (c *AikidoHttpClient) Auth(clientId string, clientSecret string) error {
-	req, err := c.makeRequest("POST", "api/oauth/token", AuthBody{
+	req, err := c.makeRequest("POST", "api/oauth/token", authRequest{
 		GrantType: "client_credentials",
 	})
 	if err != nil {
@@ -29,7 +28,7 @@ func (c *AikidoHttpClient) Auth(clientId string, clientSecret string) error {
 		return err
 	}
 
-	var auth *AuthResponse
+	var auth *authResponse
 
 	err = json.Unmarshal(responseBody, &auth)
 	if err != nil {
