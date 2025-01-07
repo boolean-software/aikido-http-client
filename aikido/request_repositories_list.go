@@ -2,14 +2,15 @@ package aikido
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/url"
 	"strconv"
 )
 
 type ListRepositoriesFilters struct {
-	Page            int32 `json:"page"`
-	PerPage         int32 `json:"per_page"`
-	IncludeInactive bool  `json:"include_inactive"`
+	Page            int32
+	PerPage         int32
+	IncludeInactive bool
 }
 
 var DefaultListRepositoriesFilters = ListRepositoriesFilters{
@@ -25,7 +26,7 @@ func (c *Client) ListRepositories(filters ListRepositoriesFilters) ([]Repository
 
 	params.Set("per_page", strconv.FormatInt(int64(filters.PerPage), 10))
 
-	params.Set("per_page", strconv.FormatInt(int64(filters.PerPage), 10))
+	params.Set("include_inactive", fmt.Sprintf("%t", filters.IncludeInactive))
 
 	req, err := c.makeRequest("GET", "api/public/v1/repositories/code?"+params.Encode(), nil)
 	if err != nil {
