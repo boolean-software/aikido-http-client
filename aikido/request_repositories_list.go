@@ -6,13 +6,6 @@ import (
 	"strconv"
 )
 
-type Repository struct {
-	ID             int    `json:"id"`
-	Name           string `json:"name"`
-	Provider       string `json:"provider"`
-	ExternalRepoID string `json:"external_repo_id"`
-}
-
 type ListRepositoriesFilters struct {
 	Page            int32 `json:"page"`
 	PerPage         int32 `json:"per_page"`
