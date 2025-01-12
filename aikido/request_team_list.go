@@ -1,7 +1,6 @@
 package aikido
 
 import (
-	"encoding/json"
 	"net/url"
 	"strconv"
 )
@@ -37,27 +36,12 @@ func (c *Client) ListTeams(filters ListTeamsFilters) ([]Team, error) {
 
 	params.Set("per_page", strconv.FormatInt(int64(filters.PerPage), 10))
 
-	req, err := c.makeRequest("GET", "api/public/v1/teams?"+params.Encode(), nil)
-	if err != nil {
-		return []Team{}, err
-	}
-
-	token, err := c.getToken()
-	if err != nil {
-		return []Team{}, err
-	}
-
-	responseBody, err := c.do(req, BearerAuth{token}, 200, []int{})
-	if err != nil {
-		return []Team{}, err
-	}
-
-	var teams []Team
-
-	err = json.Unmarshal(responseBody, &teams)
-	if err != nil {
-		return []Team{}, err
-	}
-
-	return teams, nil
+	return makeBearerRequestAndDecode[[]Team](
+		c,
+		"GET",
+		"api/public/v1/teams?"+params.Encode(),
+		nil,
+		200,
+		[]int{},
+	)
 }

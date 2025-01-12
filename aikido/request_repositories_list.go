@@ -1,7 +1,6 @@
 package aikido
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -28,27 +27,12 @@ func (c *Client) ListRepositories(filters ListRepositoriesFilters) ([]Repository
 
 	params.Set("include_inactive", fmt.Sprintf("%t", filters.IncludeInactive))
 
-	req, err := c.makeRequest("GET", "api/public/v1/repositories/code?"+params.Encode(), nil)
-	if err != nil {
-		return []Repository{}, err
-	}
-
-	token, err := c.getToken()
-	if err != nil {
-		return []Repository{}, err
-	}
-
-	responseBody, err := c.do(req, BearerAuth{token}, 200, []int{})
-	if err != nil {
-		return []Repository{}, err
-	}
-
-	var repos []Repository
-
-	err = json.Unmarshal(responseBody, &repos)
-	if err != nil {
-		return []Repository{}, err
-	}
-
-	return repos, nil
+	return makeBearerRequestAndDecode[[]Repository](
+		c,
+		"GET",
+		"api/public/v1/repositories/code?"+params.Encode(),
+		nil,
+		200,
+		[]int{},
+	)
 }

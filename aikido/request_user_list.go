@@ -1,7 +1,6 @@
 package aikido
 
 import (
-	"encoding/json"
 	"net/url"
 	"strconv"
 )
@@ -37,27 +36,12 @@ func (c *Client) ListUsers(filters ListUsersFilters) ([]AikidoUser, error) {
 		params.Set("include_inactive", strconv.FormatInt(int64(filters.IncludeInactive), 10))
 	}
 
-	req, err := c.makeRequest("GET", "api/public/v1/users?"+params.Encode(), nil)
-	if err != nil {
-		return []AikidoUser{}, err
-	}
-
-	token, err := c.getToken()
-	if err != nil {
-		return []AikidoUser{}, err
-	}
-
-	responseBody, err := c.do(req, BearerAuth{token}, 200, []int{})
-	if err != nil {
-		return []AikidoUser{}, err
-	}
-
-	var users []AikidoUser
-
-	err = json.Unmarshal(responseBody, &users)
-	if err != nil {
-		return []AikidoUser{}, err
-	}
-
-	return users, nil
+	return makeBearerRequestAndDecode[[]AikidoUser](
+		c,
+		"GET",
+		"api/public/v1/users?"+params.Encode(),
+		nil,
+		200,
+		[]int{},
+	)
 }

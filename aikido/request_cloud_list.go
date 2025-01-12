@@ -1,7 +1,6 @@
 package aikido
 
 import (
-	"encoding/json"
 	"net/url"
 	"strconv"
 )
@@ -31,27 +30,12 @@ func (c *Client) ListClouds(filters ListCloudsFilters) ([]CloudEnvironment, erro
 
 	params.Set("per_page", strconv.FormatInt(int64(filters.PerPage), 10))
 
-	req, err := c.makeRequest("GET", "api/public/v1/clouds?"+params.Encode(), nil)
-	if err != nil {
-		return []CloudEnvironment{}, err
-	}
-
-	token, err := c.getToken()
-	if err != nil {
-		return []CloudEnvironment{}, err
-	}
-
-	responseBody, err := c.do(req, BearerAuth{token}, 200, []int{})
-	if err != nil {
-		return []CloudEnvironment{}, err
-	}
-
-	var clouds []CloudEnvironment
-
-	err = json.Unmarshal(responseBody, &clouds)
-	if err != nil {
-		return []CloudEnvironment{}, err
-	}
-
-	return clouds, nil
+	return makeBearerRequestAndDecode[[]CloudEnvironment](
+		c,
+		"GET",
+		"api/public/v1/clouds?"+params.Encode(),
+		nil,
+		200,
+		[]int{},
+	)
 }
