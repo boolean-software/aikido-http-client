@@ -1,6 +1,8 @@
 package aikido
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
 func makeBearerRequestAndDecode[T any](c *Client, method string, path string, body any, expectedStatusCode int, failureStatusCodes []int) (T, error) {
 	var result T

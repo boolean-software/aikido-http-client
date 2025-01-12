@@ -1,8 +1,7 @@
 package aikido
 
 import (
-	"net/url"
-	"strconv"
+	"github.com/boolean-software/aikido-http-client/internal/util"
 )
 
 type CloudEnvironment struct {
@@ -14,8 +13,8 @@ type CloudEnvironment struct {
 }
 
 type ListCloudsFilters struct {
-	Page    int32
-	PerPage int32
+	Page    int32 `url:"page"`
+	PerPage int32 `url:"per_page"`
 }
 
 var DefaultListCloudsFilters = ListCloudsFilters{
@@ -24,16 +23,15 @@ var DefaultListCloudsFilters = ListCloudsFilters{
 }
 
 func (c *Client) ListClouds(filters ListCloudsFilters) ([]CloudEnvironment, error) {
-	params := url.Values{}
-
-	params.Set("page", strconv.FormatInt(int64(filters.Page), 10))
-
-	params.Set("per_page", strconv.FormatInt(int64(filters.PerPage), 10))
+	params, err := util.BuildURLParams(filters)
+	if err != nil {
+		return []CloudEnvironment{}, err
+	}
 
 	return makeBearerRequestAndDecode[[]CloudEnvironment](
 		c,
 		"GET",
-		"api/public/v1/clouds?"+params.Encode(),
+		"api/public/v1/clouds?"+params,
 		nil,
 		200,
 		[]int{},

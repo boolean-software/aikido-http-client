@@ -1,15 +1,13 @@
 package aikido
 
 import (
-	"fmt"
-	"net/url"
-	"strconv"
+	"github.com/boolean-software/aikido-http-client/internal/util"
 )
 
 type ListRepositoriesFilters struct {
-	Page            int32
-	PerPage         int32
-	IncludeInactive bool
+	Page            int32 `url:"page"`
+	PerPage         int32 `url:"per_page"`
+	IncludeInactive bool  `url:"include_inactive"`
 }
 
 var DefaultListRepositoriesFilters = ListRepositoriesFilters{
@@ -19,18 +17,15 @@ var DefaultListRepositoriesFilters = ListRepositoriesFilters{
 }
 
 func (c *Client) ListRepositories(filters ListRepositoriesFilters) ([]Repository, error) {
-	params := url.Values{}
-
-	params.Set("page", strconv.FormatInt(int64(filters.Page), 10))
-
-	params.Set("per_page", strconv.FormatInt(int64(filters.PerPage), 10))
-
-	params.Set("include_inactive", fmt.Sprintf("%t", filters.IncludeInactive))
+	params, err := util.BuildURLParams(filters)
+	if err != nil {
+		return []Repository{}, err
+	}
 
 	return makeBearerRequestAndDecode[[]Repository](
 		c,
 		"GET",
-		"api/public/v1/repositories/code?"+params.Encode(),
+		"api/public/v1/repositories/code?"+params,
 		nil,
 		200,
 		[]int{},
