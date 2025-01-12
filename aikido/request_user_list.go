@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-type AikidoUser struct {
+type User struct {
 	ID                 int    `json:"id"`
 	FullName           string `json:"full_name"`
 	Email              string `json:"email"`
@@ -25,7 +25,7 @@ var DefaultListUsersFilters = ListUsersFilters{
 	IncludeInactive: -1,
 }
 
-func (c *Client) ListUsers(filters ListUsersFilters) ([]AikidoUser, error) {
+func (c *Client) ListUsers(filters ListUsersFilters) ([]User, error) {
 	params := url.Values{}
 
 	if filters.TeamId >= 1 {
@@ -36,7 +36,7 @@ func (c *Client) ListUsers(filters ListUsersFilters) ([]AikidoUser, error) {
 		params.Set("include_inactive", strconv.FormatInt(int64(filters.IncludeInactive), 10))
 	}
 
-	return makeBearerRequestAndDecode[[]AikidoUser](
+	return makeBearerRequestAndDecode[[]User](
 		c,
 		"GET",
 		"api/public/v1/users?"+params.Encode(),
