@@ -15,7 +15,7 @@ func (c *Client) UpdateTeam(request UpdateTeamRequest) (bool, error) {
 	res, err := makeBearerRequestAndDecode[updateTeamResponse](
 		c,
 		"PUT",
-		"api/public/v1/teams"+request.ID,
+		"api/public/v1/teams/"+request.ID,
 		nil,
 		200,
 		[]int{400, 404},
