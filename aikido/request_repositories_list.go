@@ -1,8 +1,6 @@
 package aikido
 
-import (
-	"github.com/boolean-software/aikido-http-client/internal/util"
-)
+import "github.com/google/go-querystring/query"
 
 type ListRepositoriesFilters struct {
 	Page            int32 `url:"page"`
@@ -17,7 +15,7 @@ var DefaultListRepositoriesFilters = ListRepositoriesFilters{
 }
 
 func (c *Client) ListRepositories(filters ListRepositoriesFilters) ([]Repository, error) {
-	params, err := util.BuildURLParams(filters)
+	params, err := query.Values(filters)
 	if err != nil {
 		return []Repository{}, err
 	}
@@ -25,7 +23,7 @@ func (c *Client) ListRepositories(filters ListRepositoriesFilters) ([]Repository
 	return makeBearerRequestAndDecode[[]Repository](
 		c,
 		"GET",
-		"api/public/v1/repositories/code?"+params,
+		"api/public/v1/repositories/code?"+params.Encode(),
 		nil,
 		200,
 		[]int{},

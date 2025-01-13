@@ -1,6 +1,6 @@
 package aikido
 
-import "github.com/boolean-software/aikido-http-client/internal/util"
+import "github.com/google/go-querystring/query"
 
 type Team struct {
 	ID               int              `json:"id"`
@@ -27,7 +27,7 @@ var DefaultListTeamsFilters = ListTeamsFilters{
 }
 
 func (c *Client) ListTeams(filters ListTeamsFilters) ([]Team, error) {
-	params, err := util.BuildURLParams(filters)
+	params, err := query.Values(filters)
 	if err != nil {
 		return []Team{}, err
 	}
@@ -35,7 +35,7 @@ func (c *Client) ListTeams(filters ListTeamsFilters) ([]Team, error) {
 	return makeBearerRequestAndDecode[[]Team](
 		c,
 		"GET",
-		"api/public/v1/teams?"+params,
+		"api/public/v1/teams?"+params.Encode(),
 		nil,
 		200,
 		[]int{},

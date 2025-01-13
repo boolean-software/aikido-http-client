@@ -1,7 +1,7 @@
 package aikido
 
 import (
-	"github.com/boolean-software/aikido-http-client/internal/util"
+	"github.com/google/go-querystring/query"
 )
 
 type CloudEnvironment struct {
@@ -23,7 +23,7 @@ var DefaultListCloudsFilters = ListCloudsFilters{
 }
 
 func (c *Client) ListClouds(filters ListCloudsFilters) ([]CloudEnvironment, error) {
-	params, err := util.BuildURLParams(filters)
+	params, err := query.Values(filters)
 	if err != nil {
 		return []CloudEnvironment{}, err
 	}
@@ -31,7 +31,7 @@ func (c *Client) ListClouds(filters ListCloudsFilters) ([]CloudEnvironment, erro
 	return makeBearerRequestAndDecode[[]CloudEnvironment](
 		c,
 		"GET",
-		"api/public/v1/clouds?"+params,
+		"api/public/v1/clouds?"+params.Encode(),
 		nil,
 		200,
 		[]int{},

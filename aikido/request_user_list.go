@@ -1,9 +1,6 @@
 package aikido
 
-import (
-	"net/url"
-	"strconv"
-)
+import "github.com/google/go-querystring/query"
 
 type User struct {
 	ID                 int    `json:"id"`
@@ -16,24 +13,18 @@ type User struct {
 }
 
 type ListUsersFilters struct {
-	TeamId          int32
-	IncludeInactive int32
+	TeamId          int32 `url:"filter_team_id,omitempty"`
+	IncludeInactive int32 `url:"include_inactive"`
 }
 
 var DefaultListUsersFilters = ListUsersFilters{
-	TeamId:          -1,
-	IncludeInactive: -1,
+	IncludeInactive: 0,
 }
 
 func (c *Client) ListUsers(filters ListUsersFilters) ([]User, error) {
-	params := url.Values{}
-
-	if filters.TeamId >= 1 {
-		params.Set("filter_team_id", strconv.FormatInt(int64(filters.TeamId), 10))
-	}
-
-	if filters.IncludeInactive >= 0 {
-		params.Set("include_inactive", strconv.FormatInt(int64(filters.IncludeInactive), 10))
+	params, err := query.Values(filters)
+	if err != nil {
+		return []User{}, err
 	}
 
 	return makeBearerRequestAndDecode[[]User](
