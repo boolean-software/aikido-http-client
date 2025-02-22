@@ -14,7 +14,7 @@ func (c *Client) CreateTeam(request CreateTeamRequest) (string, error) {
 		c,
 		"POST",
 		"api/public/v1/teams",
-		nil,
+		request,
 		201,
 		[]int{400},
 	)
