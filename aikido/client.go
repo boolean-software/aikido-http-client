@@ -89,7 +89,7 @@ func (c *Client) do(req *http.Request, auth Auth, expectedStatusCode int, failur
 	}
 
 	if resp.StatusCode != expectedStatusCode {
-		return []byte{}, fmt.Errorf("unexpected status code `%d` instead of ``%d`", resp.StatusCode, 200)
+		return []byte{}, fmt.Errorf("unexpected status code `%d` instead of `%d`", resp.StatusCode, 200)
 	}
 
 	return responseBody, nil

@@ -1,7 +1,9 @@
 package aikido
 
+import "fmt"
+
 type UpdateTeamRequest struct {
-	ID               string           `json:"id"`
+	ID               int32            `json:"id"`
 	Name             string           `json:"name"`
 	Responsibilities []Responsibility `json:"responsabilities"`
 }
@@ -15,8 +17,8 @@ func (c *Client) UpdateTeam(request UpdateTeamRequest) (bool, error) {
 	res, err := makeBearerRequestAndDecode[updateTeamResponse](
 		c,
 		"PUT",
-		"api/public/v1/teams/"+request.ID,
-		nil,
+		fmt.Sprintf("api/public/v1/teams/%d", request.ID),
+		request,
 		200,
 		[]int{400, 404},
 	)

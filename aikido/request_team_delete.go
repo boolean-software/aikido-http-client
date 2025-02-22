@@ -1,7 +1,9 @@
 package aikido
 
+import "fmt"
+
 type DeleteTeamRequest struct {
-	ID string
+	ID int32
 }
 
 func (c *Client) DeleteTeam(request DeleteTeamRequest) (bool, error) {
@@ -9,7 +11,7 @@ func (c *Client) DeleteTeam(request DeleteTeamRequest) (bool, error) {
 	err := makeBearerRequest(
 		c,
 		"DELETE",
-		"api/public/v1/teams/"+request.ID,
+		fmt.Sprintf("api/public/v1/teams/%d", request.ID),
 		nil,
 		204,
 		[]int{400, 404},
