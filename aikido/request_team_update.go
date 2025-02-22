@@ -5,7 +5,7 @@ import "fmt"
 type UpdateTeamRequest struct {
 	ID               int32            `json:"id"`
 	Name             string           `json:"name"`
-	Responsibilities []Responsibility `json:"responsabilities"`
+	Responsibilities []Responsibility `json:"responsibilities"`
 }
 
 type updateTeamResponse struct {
