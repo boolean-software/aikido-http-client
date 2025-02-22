@@ -5,10 +5,10 @@ type CreateTeamRequest struct {
 }
 
 type createTeamResponse struct {
-	ID string `json:"id"`
+	ID int32 `json:"id"`
 }
 
-func (c *Client) CreateTeam(request CreateTeamRequest) (string, error) {
+func (c *Client) CreateTeam(request CreateTeamRequest) (int32, error) {
 
 	res, err := makeBearerRequestAndDecode[createTeamResponse](
 		c,
@@ -20,7 +20,7 @@ func (c *Client) CreateTeam(request CreateTeamRequest) (string, error) {
 	)
 
 	if err != nil {
-		return "", err
+		return -1, err
 	}
 
 	return res.ID, nil
